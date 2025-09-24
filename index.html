@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sistema de Tickets - Visualización</title>
+  <style>
+    /* === Tus estilos originales aquí, sin cambios === */
+        :root {
+            --primary: #cc0000;
+            --primary-dark: #990000;
+            --secondary: #ffd700;
+            --light: #f8f9fa;
+            --dark: #343a40;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+            color: #333;
+            min-height: 100vh;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        header {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        
+        h1 {
+            color: var(--primary);
+            margin-bottom: 10px;
+            font-size: 2.5rem;
+        }
+        
+        .subtitle {
+            color: var(--dark);
+            font-size: 1.2rem;
+            margin-bottom: 20px;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 20px;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            padding: 12px 15px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .search-box:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+        }
+        
+        .filter-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        
+        .filter {
+            padding: 10px 15px;
+            border: 2px solid #ddd;
+            border-radius: 30px;
+            background: white;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        
+        .filter:hover, .filter.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .stats {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            margin-bottom: 20px;
+        }
+        
+        .stat-card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 15px 20px;
+            flex: 1;
+            min-width: 200px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .stat-title {
+            font-size: 0.9rem;
+            color: var(--dark);
+        }
+        
+        .tickets-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            gap: 20px;
+        }
+        
+        .ticket {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .ticket:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+        }
+        
+        .ticket-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .ticket-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        .ticket-meta {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .priority, .status {
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .priority-high {
+            background-color: var(--danger);
+            color: white;
+        }
+        
+        .priority-medium {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .priority-low {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .status-open {
+            background-color: var(--info);
+            color: white;
+        }
+        
+        .status-pending {
+            background-color: var(--warning);
+            color: var(--dark);
+        }
+        
+        .status-closed {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .ticket-body {
+            padding: 20px;
+        }
+        
+        .ticket-field {
+            margin-bottom: 15px;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .field-label {
+            font-weight: 600;
+            color: var(--dark);
+            margin-bottom: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .field-value {
+            color: #555;
+            font-size: 1rem;
+        }
+        
+        .ticket-footer {
+            padding: 15px 20px;
+            background: #f8f9fa;
+            border-top: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .notification {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9rem;
+        }
+        
+        .notification-badge {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--success);
+        }
+        
+        .notification-badge.pending {
+            background: var(--danger);
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+            color: white;
+            grid-column: 1 / -1;
+        }
+        
+        .no-tickets {
+            text-align: center;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            font-size: 1.2rem;
+            grid-column: 1 / -1;
+        }
+        
+        @media (max-width: 768px) {
+            .tickets-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .search-box {
+                width: 100%;
+            }
+            
+            .filter-group {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .stats {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1>Sistema de Tickets</h1>
+      <p class="subtitle">Visualización de tickets registrados en el sistema</p>
+    </header>
+
+    <div class="controls">
+      <input type="text" class="search-box" placeholder="Buscar en tickets..." id="searchInput">
+      <div class="filter-group">
+        <select class="filter" id="priorityFilter">
+          <option value="">Todas las prioridades</option>
+          <option value="Alta">Alta</option>
+          <option value="Media">Media</option>
+          <option value="Baja">Baja</option>
+          <option value="Crítica">Crítica</option>
+        </select>
+        <select class="filter" id="statusFilter">
+          <option value="">Todos los estados</option>
+          <option value="Reparado">Reparado</option>
+          <option value="Pendiente">Pendiente</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card"><div class="stat-number" id="totalTickets">0</div><div class="stat-title">Total</div></div>
+      <div class="stat-card"><div class="stat-number" id="openTickets">0</div><div class="stat-title">Pendientes</div></div>
+      <div class="stat-card"><div class="stat-number" id="criticalTickets">0</div><div class="stat-title">Críticos</div></div>
+      <div class="stat-card"><div class="stat-number" id="resolvedTickets">0</div><div class="stat-title">Reparados</div></div>
+    </div>
+
+    <div class="tickets-container" id="ticketsContainer">
+      <div class="loading">Cargando tickets...</div>
+    </div>
+  </div>
+
+  <script>
+    const url = "https://script.google.com/macros/s/AKfycbxuLvfkdEpaaMDFLj2CDGaYI13OoEvy2yycaEV24zriIMhdtcNkCCRqk_3hK01O-tKMWA/exec"; // Reemplaza con tu WebApp
+
+    let ticketsData = [];
+
+    function normalize(s) {
+      if (!s) return "";
+      return String(s).trim().toLowerCase()
+        .normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+    }
+
+    function canonPrior(p) {
+      const s = normalize(p);
+      if (s.includes("crit")) return "Crítica";
+      if (s.includes("alta")) return "Alta";
+      if (s.includes("media")) return "Media";
+      if (s.includes("baja")) return "Baja";
+      return p;
+    }
+
+    function canonEstado(e) {
+      const s = normalize(e);
+      if (s.includes("pend")) return "Pendiente";
+      if (s.includes("repar") || s.includes("resuel") || s.includes("cerr")) return "Reparado";
+      return e;
+    }
+
+    function formatDate(dateString) {
+      if (!dateString) return "";
+      return new Date(dateString).toLocaleString("es-ES");
+    }
+
+    function getPriorityClass(priority) {
+      if (priority.includes("Crítica") || priority.includes("Alta")) return "priority-high";
+      if (priority.includes("Media")) return "priority-medium";
+      return "priority-low";
+    }
+
+    function getStatusClass(status) {
+      if (status.includes("Pendiente")) return "status-pending";
+      if (status.includes("Reparado")) return "status-closed";
+      return "status-open";
+    }
+
+    function renderTickets(tickets) {
+      const container = document.getElementById("ticketsContainer");
+      if (!tickets || tickets.length === 0) {
+        container.innerHTML = '<div class="no-tickets">No se encontraron tickets.</div>';
+        return;
+      }
+      container.innerHTML = "";
+
+      tickets.forEach(ticket => {
+        const ticketElement = document.createElement("div");
+        ticketElement.className = "ticket";
+        ticketElement.innerHTML = `
+          <div class="ticket-header">
+            <div class="ticket-title">${ticket.tipo || 'Sin tipo'}</div>
+            <div class="ticket-meta">
+              <div class="priority ${getPriorityClass(ticket.prioridad)}">${ticket.prioridad}</div>
+              <div class="status ${getStatusClass(ticket.estado)}">${ticket.estado}</div>
+            </div>
+          </div>
+          <div class="ticket-body">
+            <div class="ticket-field"><span class="field-label">Solicitante</span><span class="field-value">${ticket.nombre}</span></div>
+            <div class="ticket-field"><span class="field-label">Documento</span><span class="field-value">${ticket.documento}</span></div>
+            <div class="ticket-field"><span class="field-label">Correo</span><span class="field-value">${ticket.correo}</span></div>
+            <div class="ticket-field"><span class="field-label">Departamento</span><span class="field-value">${ticket.departamento}</span></div>
+            <div class="ticket-field"><span class="field-label">Sistema Afectado</span><span class="field-value">${ticket.sistema}</span></div>
+            <div class="ticket-field"><span class="field-label">Descripción</span><span class="field-value">${ticket.descripcion}</span></div>
+          </div>
+          <div class="ticket-footer">
+            <div class="notification">
+              <div class="notification-badge ${ticket.notificacion ? '' : 'pending'}"></div>
+              ${ticket.notificacion || 'Pendiente notificar'}
+            </div>
+            <div class="ticket-date">${formatDate(ticket.timestamp)}</div>
+            ${ticket.estado === 'Pendiente' ? `<button class="repair-btn" onclick="marcarReparado('${ticket.documento}')">✅ Reparar</button>` : ""}
+          </div>
+        `;
+        container.appendChild(ticketElement);
+      });
+      updateStats(tickets);
+    }
+
+    function updateStats(tickets) {
+      document.getElementById("totalTickets").textContent = tickets.length;
+      document.getElementById("openTickets").textContent = tickets.filter(t => t.estado === "Pendiente").length;
+      document.getElementById("criticalTickets").textContent = tickets.filter(t => t.prioridad === "Crítica").length;
+      document.getElementById("resolvedTickets").textContent = tickets.filter(t => t.estado === "Reparado").length;
+    }
+
+    function filterTickets() {
+      const searchText = normalize(document.getElementById("searchInput").value);
+      const priorityFilter = document.getElementById("priorityFilter").value;
+      const statusFilter = document.getElementById("statusFilter").value;
+      const filteredTickets = ticketsData.filter(ticket => {
+        const matchesSearch =
+          normalize(ticket.nombre).includes(searchText) ||
+          normalize(ticket.documento).includes(searchText) ||
+          normalize(ticket.correo).includes(searchText) ||
+          normalize(ticket.departamento).includes(searchText) ||
+          normalize(ticket.tipo).includes(searchText) ||
+          normalize(ticket.descripcion).includes(searchText) ||
+          normalize(ticket.sistema).includes(searchText);
+        const matchesPriority = !priorityFilter || ticket.prioridad === priorityFilter;
+        const matchesStatus = !statusFilter || ticket.estado === statusFilter;
+        return matchesSearch && matchesPriority && matchesStatus;
+      });
+      renderTickets(filteredTickets);
+    }
+
+    function marcarReparado(documento) {
+      if (!confirm("¿Marcar este ticket como reparado?")) return;
+      fetch(url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "marcarReparado", documento: documento })
+      })
+      .then(r => r.json())
+      .then(resp => {
+        if (resp.success) {
+          alert("✅ Ticket marcado como reparado.");
+          location.reload();
+        } else {
+          alert("❌ Error: " + resp.message);
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        alert("⚠️ Error en la conexión.");
+      });
+    }
+
+    // Cargar tickets al inicio
+    fetch(url)
+      .then(r => r.json())
+      .then(data => {
+        ticketsData = data.map(row => ({
+          timestamp: row["Timestamp"],
+          nombre: row["Nombre "] || row["Nombre"],
+          documento: row["Documento"],
+          correo: row["Correo"],
+          departamento: row["Departamento"],
+          tipo: row["Tipo de solicitud"] || row["tipo"],
+          descripcion: row["Descripcion"] || row["Descripción"],
+          prioridad: canonPrior(row["Prioridad"]),
+          sistema: row["Sistema afectado"],
+          estado: canonEstado(row["Estado "] || row["Estado"]),
+          notificacion: row["Notificación"] || row["Notificacion"]
+        }));
+        renderTickets(ticketsData);
+      })
+      .catch(err => {
+        console.error("Error cargando datos:", err);
+        document.getElementById("ticketsContainer").innerHTML = '<div class="no-tickets">⚠️ Error cargando datos</div>';
+      });
+
+    document.getElementById("searchInput").addEventListener("input", filterTickets);
+    document.getElementById("priorityFilter").addEventListener("change", filterTickets);
+    document.getElementById("statusFilter").addEventListener("change", filterTickets);
+  </script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+## 📄 Licencia
+
+Este software es propiedad de **GÓMEZ MORAD Y ASOCIADOS**.  
+Está destinado exclusivamente para uso interno de la organización.  
+
+Queda estrictamente prohibida su:
+- Copia
+- Distribución
+- Modificación
+- Uso no autorizado fuera de la empresa
+
+El incumplimiento de estas condiciones puede dar lugar a acciones legales.  
+
+© 2025 GÓMEZ MORAD Y ASOCIADOS - Todos los derechos reservados.
