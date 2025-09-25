@@ -6,303 +6,318 @@
   <title>Sistema de Tickets - Visualización</title>
   <style>
     /* === Tus estilos originales aquí, sin cambios === */
-        :root {
-            --primary: #cc0000;
-            --primary-dark: #990000;
-            --secondary: #ffd700;
-            --light: #f8f9fa;
-            --dark: #343a40;
-            --success: #28a745;
-            --warning: #ffc107;
-            --danger: #dc3545;
-            --info: #17a2b8;
-        }
-        
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-        }
-        
-        body {
-            background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
-            color: #333;
-            min-height: 100vh;
-            padding: 20px;
-        }
-        
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-        
-        header {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            text-align: center;
-        }
-        
-        h1 {
-            color: var(--primary);
-            margin-bottom: 10px;
-            font-size: 2.5rem;
-        }
-        
-        .subtitle {
-            color: var(--dark);
-            font-size: 1.2rem;
-            margin-bottom: 20px;
+    :root {
+        --primary: #cc0000;
+        --primary-dark: #990000;
+        --secondary: #ffd700;
+        --light: #f8f9fa;
+        --dark: #343a40;
+        --success: #28a745;
+        --warning: #ffc107;
+        --danger: #dc3545;
+        --info: #17a2b8;
+    }
+    
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+        background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+        color: #333;
+        min-height: 100vh;
+        padding: 20px;
+    }
+    
+    .container {
+        max-width: 1400px;
+        margin: 0 auto;
+    }
+    
+    header {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 20px;
+        margin-bottom: 25px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        text-align: center;
+    }
+    
+    h1 {
+        color: var(--primary);
+        margin-bottom: 10px;
+        font-size: 2.5rem;
+    }
+    
+    .subtitle {
+        color: var(--dark);
+        font-size: 1.2rem;
+        margin-bottom: 20px;
+    }
+    
+    .controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-bottom: 20px;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    }
+    
+    .search-box {
+        flex: 1;
+        min-width: 250px;
+        padding: 12px 15px;
+        border: 2px solid #ddd;
+        border-radius: 30px;
+        font-size: 16px;
+        transition: all 0.3s;
+    }
+    
+    .search-box:focus {
+        border-color: var(--primary);
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+    }
+    
+    .filter-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+    }
+    
+    .filter {
+        padding: 10px 15px;
+        border: 2px solid #ddd;
+        border-radius: 30px;
+        background: white;
+        cursor: pointer;
+        font-weight: 500;
+        transition: all 0.3s;
+    }
+    
+    .filter:hover, .filter.active {
+        background: var(--primary);
+        color: white;
+        border-color: var(--primary);
+    }
+    
+    .stats {
+        display: flex;
+        gap: 15px;
+        flex-wrap: wrap;
+        margin-bottom: 20px;
+    }
+    
+    .stat-card {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        padding: 15px 20px;
+        flex: 1;
+        min-width: 200px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        text-align: center;
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: var(--primary);
+        margin-bottom: 5px;
+    }
+    
+    .stat-title {
+        font-size: 0.9rem;
+        color: var(--dark);
+    }
+    
+    .tickets-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+        gap: 20px;
+    }
+    
+    .ticket {
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        overflow: hidden;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .ticket:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .ticket-header {
+        background: var(--primary);
+        color: white;
+        padding: 15px 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .ticket-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+    }
+    
+    .ticket-meta {
+        display: flex;
+        gap: 10px;
+    }
+    
+    .priority, .status {
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: bold;
+    }
+    
+    .priority-high {
+        background-color: var(--danger);
+        color: white;
+    }
+    
+    .priority-medium {
+        background-color: var(--warning);
+        color: var(--dark);
+    }
+    
+    .priority-low {
+        background-color: var(--success);
+        color: white;
+    }
+    
+    .status-open {
+        background-color: var(--info);
+        color: white;
+    }
+    
+    .status-pending {
+        background-color: var(--warning);
+        color: var(--dark);
+    }
+    
+    .status-closed {
+        background-color: var(--success);
+        color: white;
+    }
+    
+    .ticket-body {
+        padding: 20px;
+    }
+    
+    .ticket-field {
+        margin-bottom: 15px;
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .field-label {
+        font-weight: 600;
+        color: var(--dark);
+        margin-bottom: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .field-value {
+        color: #555;
+        font-size: 1rem;
+    }
+    
+    .ticket-footer {
+        padding: 15px 20px;
+        background: #f8f9fa;
+        border-top: 1px solid #eee;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    
+    .notification {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.9rem;
+    }
+    
+    .notification-badge {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--success);
+    }
+    
+    .notification-badge.pending {
+        background: var(--danger);
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 40px;
+        font-size: 1.2rem;
+        color: white;
+        grid-column: 1 / -1;
+    }
+    
+    .no-tickets {
+        text-align: center;
+        padding: 40px;
+        background: rgba(255, 255, 255, 0.95);
+        border-radius: 10px;
+        font-size: 1.2rem;
+        grid-column: 1 / -1;
+    }
+
+    .repair-btn {
+        background: var(--success);
+        color: white;
+        border: none;
+        padding: 8px 15px;
+        border-radius: 5px;
+        cursor: pointer;
+        font-weight: bold;
+        transition: background 0.3s;
+    }
+
+    .repair-btn:hover {
+        background: #218838;
+    }
+    
+    @media (max-width: 768px) {
+        .tickets-container {
+            grid-template-columns: 1fr;
         }
         
         .controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-bottom: 20px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            flex-direction: column;
+            align-items: stretch;
         }
         
         .search-box {
-            flex: 1;
-            min-width: 250px;
-            padding: 12px 15px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            font-size: 16px;
-            transition: all 0.3s;
-        }
-        
-        .search-box:focus {
-            border-color: var(--primary);
-            outline: none;
-            box-shadow: 0 0 0 3px rgba(204, 0, 0, 0.2);
+            width: 100%;
         }
         
         .filter-group {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-        
-        .filter {
-            padding: 10px 15px;
-            border: 2px solid #ddd;
-            border-radius: 30px;
-            background: white;
-            cursor: pointer;
-            font-weight: 500;
-            transition: all 0.3s;
-        }
-        
-        .filter:hover, .filter.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
+            width: 100%;
+            justify-content: center;
         }
         
         .stats {
-            display: flex;
-            gap: 15px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-        
-        .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            padding: 15px 20px;
-            flex: 1;
-            min-width: 200px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 2rem;
-            font-weight: bold;
-            color: var(--primary);
-            margin-bottom: 5px;
-        }
-        
-        .stat-title {
-            font-size: 0.9rem;
-            color: var(--dark);
-        }
-        
-        .tickets-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
-            gap: 20px;
-        }
-        
-        .ticket {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .ticket:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-        }
-        
-        .ticket-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .ticket-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-        }
-        
-        .ticket-meta {
-            display: flex;
-            gap: 10px;
-        }
-        
-        .priority, .status {
-            padding: 5px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-        }
-        
-        .priority-high {
-            background-color: var(--danger);
-            color: white;
-        }
-        
-        .priority-medium {
-            background-color: var(--warning);
-            color: var(--dark);
-        }
-        
-        .priority-low {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .status-open {
-            background-color: var(--info);
-            color: white;
-        }
-        
-        .status-pending {
-            background-color: var(--warning);
-            color: var(--dark);
-        }
-        
-        .status-closed {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .ticket-body {
-            padding: 20px;
-        }
-        
-        .ticket-field {
-            margin-bottom: 15px;
-            display: flex;
             flex-direction: column;
         }
-        
-        .field-label {
-            font-weight: 600;
-            color: var(--dark);
-            margin-bottom: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .field-value {
-            color: #555;
-            font-size: 1rem;
-        }
-        
-        .ticket-footer {
-            padding: 15px 20px;
-            background: #f8f9fa;
-            border-top: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .notification {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 0.9rem;
-        }
-        
-        .notification-badge {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: var(--success);
-        }
-        
-        .notification-badge.pending {
-            background: var(--danger);
-        }
-        
-        .loading {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-            color: white;
-            grid-column: 1 / -1;
-        }
-        
-        .no-tickets {
-            text-align: center;
-            padding: 40px;
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 10px;
-            font-size: 1.2rem;
-            grid-column: 1 / -1;
-        }
-        
-        @media (max-width: 768px) {
-            .tickets-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .search-box {
-                width: 100%;
-            }
-            
-            .filter-group {
-                width: 100%;
-                justify-content: center;
-            }
-            
-            .stats {
-                flex-direction: column;
-            }
-        }
-    </style>
+    }
+  </style>
 </head>
 <body>
   <div class="container">
@@ -342,7 +357,8 @@
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyQOhT5qTsdRHChOVEhSaVsi3I5kxoPddZxWAeJm1LH8OQ5RyLQ-LygIc7SVF6O8dpGag/exec"; // Reemplaza con tu WebApp
+    // 🔥 REEMPLAZA ESTA URL CON LA CORRECTA (SOLO UNA URL)
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbyPnFvVvF0wCAbU7j74HVF5zPLmvUcYGbdpVf1Hb0fqIfAMy8BvrAuv2ty5XX-xs83T/exec";
 
     let ticketsData = [];
 
@@ -454,49 +470,52 @@
     }
 
     function marcarReparado(documento) {
-      if (!confirm("¿Marcar este ticket como reparado?")) return;
-      fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "marcarReparado", documento: documento })
-      })
-      .then(r => r.json())
-      .then(resp => {
-        if (resp.success) {
-          alert("✅ Ticket marcado como reparado.");
-          location.reload();
-        } else {
-          alert("❌ Error: " + resp.message);
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("⚠️ Error en la conexión.");
-      });
+      if (!confirm(`¿Estás seguro de que quieres marcar el ticket con documento ${documento} como REPARADO?`)) {
+        return;
+      }
+      
+      fetch(`${WEB_APP_URL}?action=marcarReparado&documento=${documento}`)
+        .then(r => r.json())
+        .then(data => {
+          if (data.success) {
+            alert(`✅ Ticket ${documento} marcado como reparado correctamente`);
+            location.reload(); // Recargar para ver los cambios
+          } else {
+            alert(`⚠️ Error: ${data.message}`);
+          }
+        })
+        .catch(err => {
+          console.error("Error en fetch:", err);
+          alert("❌ Error de conexión al marcar como reparado");
+        });
     }
 
     // Cargar tickets al inicio
-    fetch(SCRIPT_URL)
+    fetch(WEB_APP_URL)
       .then(r => r.json())
       .then(data => {
-        ticketsData = data.map(row => ({
-          timestamp: row["Timestamp"],
-          nombre: row["Nombre "] || row["Nombre"],
-          documento: row["Documento"],
-          correo: row["Correo"],
-          departamento: row["Departamento"],
-          tipo: row["Tipo de solicitud"] || row["tipo"],
-          descripcion: row["Descripcion"] || row["Descripción"],
-          prioridad: canonPrior(row["Prioridad"]),
-          sistema: row["Sistema afectado"],
-          estado: canonEstado(row["Estado "] || row["Estado"]),
-          notificacion: row["Notificación"] || row["Notificacion"]
-        }));
-        renderTickets(ticketsData);
+        if (data.success && data.data) {
+          ticketsData = data.data.map(row => ({
+            timestamp: row["Timestamp"],
+            nombre: row["Nombre"] || row["Nombre "],
+            documento: row["Documento"],
+            correo: row["Correo"],
+            departamento: row["Departamento"],
+            tipo: row["Tipo de solicitud"] || row["tipo"],
+            descripcion: row["Descripción"] || row["Descripcion"],
+            prioridad: canonPrior(row["Prioridad"]),
+            sistema: row["Sistema afectado"] || row["Garces afectado"],
+            estado: canonEstado(row["Estado"] || row["Estado "]),
+            notificacion: row["Notificación"] || row["Not.Lif.Lección"]
+          }));
+          renderTickets(ticketsData);
+        } else {
+          throw new Error("Estructura de datos incorrecta");
+        }
       })
       .catch(err => {
         console.error("Error cargando datos:", err);
-        document.getElementById("ticketsContainer").innerHTML = '<div class="no-tickets">⚠️ Error cargando datos</div>';
+        document.getElementById("ticketsContainer").innerHTML = '<div class="no-tickets">⚠️ Error cargando datos: ' + err.message + '</div>';
       });
 
     document.getElementById("searchInput").addEventListener("input", filterTickets);
