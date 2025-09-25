@@ -476,7 +476,7 @@
     }
 
     // Cargar tickets al inicio
-    fetch(url)
+    fetch(SCRIPT_URL)
       .then(r => r.json())
       .then(data => {
         ticketsData = data.map(row => ({
