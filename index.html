@@ -453,27 +453,25 @@
       renderTickets(filteredTickets);
     }
 
-    function marcarReparado(documento) {
-      if (!confirm("¿Marcar este ticket como reparado?")) return;
-      fetch(url, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ action: "marcarReparado", documento: documento })
-      })
-      .then(r => r.json())
-      .then(resp => {
-        if (resp.success) {
-          alert("✅ Ticket marcado como reparado.");
-          location.reload();
+    async function marcarReparado(documento) {
+      try {
+        const res = await fetch(SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "marcarReparado", documento })
+        });
+        const data = await res.json();
+        if (data.success) {
+          alert("✅ Ticket marcado como reparado");
+          cargarTickets();
         } else {
-          alert("❌ Error: " + resp.message);
+          alert("⚠️ Error: " + data.message);
         }
-      })
-      .catch(err => {
-        console.error(err);
-        alert("⚠️ Error en la conexión.");
-      });
+      } catch (err) {
+        alert("❌ Error en la conexión: " + err.message);
+      }
     }
+
 
     // Cargar tickets al inicio
     fetch(SCRIPT_URL)
